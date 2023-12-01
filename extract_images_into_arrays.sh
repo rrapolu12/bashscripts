@@ -2,7 +2,7 @@
 
 parse_yaml() {
     local yaml_file="$1"
-
+    local item_to_parse="$2"
     # Define arrays to store lines under different sections
     declare -a images
     declare -a helmcharts
@@ -43,31 +43,25 @@ parse_yaml() {
         fi
     done < "$yaml_file"
 
-    # Print the contents of the arrays (optional)
-    echo "Images:"
-    for image in "${images[@]}"; do
-        echo "  $image"
-    done
-
-    echo "Helmcharts:"
-    for helmchart in "${helmcharts[@]}"; do
-        echo "  $helmchart"
-    done
-
-    echo "RPMs:"
-    for rpm in "${rpms[@]}"; do
-        echo "  $rpm"
-    done
-
     # Return the images array
-    echo "${images[@]}"
+    if [ "$item_to_parse" == "images" ]; then
+        echo "${images[@]}"
+    elif [ "$item_to_parse" == "helmcharts" ]; then
+        echo "${helmcharts[@]}"
+    elif [ "$item_to_parse" == "rpms" ]; then
+        echo "${rpms[@]}"
+    fi
+    
+    
 }
 
 # Call the function with the YAML file path
-images_array=($(parse_yaml "your_yaml_file.yaml"))
+#parse_yaml "repo.yaml" "images"
+images_array=$(parse_yaml "repo.yaml" "images")
 
 # Print the images array outside the function
+echo "=========================================="
 echo "Images outside the function:"
 for image in "${images_array[@]}"; do
-    echo "  $image"
+    echo "$image"
 done
